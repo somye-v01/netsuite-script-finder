@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NetSuite Script Finder</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- ── Header ───────────────────────────────────────────────────────── -->
+  <div id="header">
+    <div class="header-top">
+      <div class="logo">⚡</div>
+      <div class="header-title">
+        <h1>Script Finder</h1>
+        <div class="subtitle">NetSuite Deployment Inspector</div>
+      </div>
+    </div>
+    <div id="record-badge-wrap">
+      <div class="record-badge" id="record-badge">
+        <span class="dot"></span>
+        <span id="record-type-label">Detecting record…</span>
+      </div>
+      <div class="account-tag" id="account-tag"></div>
+    </div>
+  </div>
+
+  <!-- ── Tab Bar ──────────────────────────────────────────────────────────── -->
+  <div id="tab-bar">
+    <button class="tab-btn active" data-tab="scripts">📋 Scripts</button>
+    <button class="tab-btn" data-tab="field-search">🔍 Field Search</button>
+  </div>
+
+  <!-- ── Search Bar (Scripts tab only) ─────────────────────────────────── -->
+  <div id="search-bar">
+    <input
+      type="text"
+      id="search-input"
+      placeholder="Search scripts by name, ID, or function…"
+      autocomplete="off"
+      spellcheck="false"
+    />
+  </div>
+
+  <!-- ── Filter Pills ──────────────────────────────────────────────────── -->
+  <div id="filter-bar">
+    <button class="filter-pill active" data-type="all">All</button>
+    <button class="filter-pill" data-type="clientscript">Client</button>
+    <button class="filter-pill" data-type="userevent">User Event</button>
+    <button class="filter-pill" data-type="suitelet">Suitelet</button>
+    <button class="filter-pill" data-type="mapreduce">Map/Reduce</button>
+    <button class="filter-pill" data-type="scheduled">Scheduled</button>
+    <button class="filter-pill" data-type="restlet">RESTlet</button>
+    <button class="filter-pill" data-type="workflowaction">Workflow</button>
+  </div>
+
+  <!-- ── Main Content ──────────────────────────────────────────────────── -->
+  <div id="content">
+
+    <!-- Loading state -->
+    <div id="loading-state">
+      <div class="spinner"></div>
+      <div class="loading-text">Querying script deployments…</div>
+    </div>
+
+    <!-- Empty state (hidden initially) -->
+    <div id="empty-state" style="display:none;">
+      <div class="state-icon">🔍</div>
+      <div class="state-title">No scripts found</div>
+      <div class="state-body">No active script deployments were found for this record type.</div>
+    </div>
+
+    <!-- Error state (hidden initially) -->
+    <div id="error-state" style="display:none;">
+      <div class="state-icon">⚠️</div>
+      <div class="state-title" id="error-title">Something went wrong</div>
+      <div class="state-body" id="error-body">Could not fetch script data from NetSuite.</div>
+      <button class="btn-retry" id="btn-retry">Try Again</button>
+    </div>
+
+    <!-- Non-NetSuite page state (hidden initially) -->
+    <div id="non-ns-state" style="display:none;">
+      <div class="state-icon">🌐</div>
+      <div class="state-title">Not a NetSuite page</div>
+      <div class="state-body">Navigate to a NetSuite record to inspect its script deployments.</div>
+    </div>
+
+    <!-- No record state (hidden initially) -->
+    <div id="no-record-state" style="display:none;">
+      <div class="state-icon">📄</div>
+      <div class="state-title">No record detected</div>
+      <div class="state-body">Open a specific record (e.g. a Sales Order or Customer) to see its scripts.</div>
+    </div>
+
+    <!-- Script cards rendered here -->
+    <div id="scripts-container" style="display:none;"></div>
+
+  </div><!-- end #content -->
+
+  <!-- ══ FIELD SEARCH PANEL ══════════════════════════════════════════════ -->
+  <div id="field-search-panel" style="display:none;">
+
+    <div id="field-search-form">
+      <div class="fs-input-row">
+        <input
+          type="text"
+          id="field-id-input"
+          placeholder="e.g. custbody_myfield  or  subsidiary"
+          autocomplete="off"
+          spellcheck="false"
+        />
+        <button id="btn-field-search">Search</button>
+      </div>
+      <div class="fs-hint">Enter a field ID. The extension will scan all script source files on this record for that string.</div>
+    </div>
+
+    <!-- Field search loading -->
+    <div id="fs-loading" style="display:none;">
+      <div class="spinner"></div>
+      <div class="loading-text" id="fs-loading-text">Scanning scripts…</div>
+    </div>
+
+    <!-- Field search results -->
+    <div id="fs-results" style="display:none;"></div>
+
+    <!-- Field search empty -->
+    <div id="fs-empty" class="fs-state" style="display:none;">
+      <div class="state-icon">🎉</div>
+      <div class="state-title">No matches found</div>
+      <div class="state-body">No script source code references <code id="fs-empty-field"></code> on this record.</div>
+    </div>
+
+    <!-- Field search error -->
+    <div id="fs-error" class="fs-state" style="display:none;">
+      <div class="state-icon">⚠️</div>
+      <div class="state-title" id="fs-error-title">Search failed</div>
+      <div class="state-body" id="fs-error-body"></div>
+    </div>
+
+    <!-- No scripts loaded yet -->
+    <div id="fs-no-scripts" class="fs-state" style="display:none;">
+      <div class="state-icon">📋</div>
+      <div class="state-title">Load scripts first</div>
+      <div class="state-body">Switch to the Scripts tab and wait for deployments to load before searching.</div>
+    </div>
+
+  </div><!-- end #field-search-panel -->
+
+  <!-- ── Footer ────────────────────────────────────────────────────────── -->
+  <div id="footer-bar" style="display:none;">
+    <div class="footer-count">
+      <strong id="visible-count">0</strong> <span id="total-count-label">scripts</span>
+    </div>
+    <label class="show-inactive-label">
+      <input type="checkbox" id="show-inactive-toggle" />
+      Show inactive
+    </label>
+  </div>
+
+  <!-- ── Toast ─────────────────────────────────────────────────────────── -->
+  <div id="toast" role="status" aria-live="polite"></div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
