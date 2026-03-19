@@ -1,1 +1,15 @@
+# macOS
 .DS_Store
+.AppleDouble
+.LSOverride
+
+# Editor swap/temp files
+*.swp
+*.swo
+*~
+
+# VS Code
+.vscode/
+
+# Logs
+*.log
