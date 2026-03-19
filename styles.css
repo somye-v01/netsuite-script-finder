@@ -263,18 +263,19 @@ body {
 
 .category-label {
   font-size: 10px;
-  font-weight: 600;
+  font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.07em;
-  color: var(--text-2);
+  color: var(--text);
 }
 
 .category-count {
   margin-left: auto;
-  font-size: 10px;
-  color: var(--text-3);
-  background: var(--bg-card);
-  border: 1px solid var(--border);
+  font-size: 9px;
+  font-weight: 700;
+  color: var(--text-2);
+  background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.1);
   padding: 1px 6px;
   border-radius: 10px;
 }
@@ -378,19 +379,19 @@ body {
   align-items: center;
   gap: 6px;
   font-size: 10px;
-  font-weight: 600;
-  color: var(--text-2);
+  font-weight: 700;
+  color: var(--text);
   margin: 8px 2px 4px;
   letter-spacing: 0.03em;
 }
 
 .ep-group-count {
-  font-size: 10px;
-  font-weight: 400;
-  color: var(--text-3);
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  padding: 0 5px;
+  font-size: 9px;
+  font-weight: 700;
+  color: var(--text-2);
+  background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.1);
+  padding: 1px 5px;
   border-radius: 8px;
 }
 
