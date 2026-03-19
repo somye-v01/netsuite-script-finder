@@ -329,6 +329,34 @@ function renderGroups(grouped) {
   els.visibleCount.textContent = totalVisible;
   els.totalCountLabel.textContent = totalVisible === 1 ? 'script' : 'scripts';
 
+  // Update count badges on filter pills (respects showInactive, ignores type/search filter)
+  document.querySelectorAll('.filter-pill[data-type]').forEach(pill => {
+    const type = pill.dataset.type;
+    let count = 0;
+    if (type === 'all') {
+      for (const cat of Object.values(grouped)) {
+        let ss = cat.scripts || [];
+        if (!STATE.showInactive) ss = ss.filter(s => s.isDeployed && !s.isInactive);
+        count += ss.length;
+      }
+    } else {
+      const cat = grouped[type];
+      if (cat) {
+        let ss = cat.scripts || [];
+        if (!STATE.showInactive) ss = ss.filter(s => s.isDeployed && !s.isInactive);
+        count = ss.length;
+      }
+    }
+    let badge = pill.querySelector('.pill-count');
+    if (!badge) {
+      badge = document.createElement('span');
+      badge.className = 'pill-count';
+      pill.appendChild(badge);
+    }
+    badge.textContent = count;
+    badge.style.display = count === 0 ? 'none' : '';
+  });
+
   if (totalVisible === 0) {
     showOnly('emptyState');
   } else {
