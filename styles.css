@@ -218,18 +218,18 @@ body {
 
 .pill-count {
   font-size: 9px;
-  font-weight: 600;
-  background: rgba(255,255,255,0.08);
+  font-weight: 700;
+  background: rgba(255,255,255,0.12);
   border-radius: 8px;
-  padding: 0 4px;
+  padding: 1px 5px;
   margin-left: 4px;
-  color: var(--text-3);
+  color: var(--text-2);
 }
 
 .filter-pill.active .pill-count,
 .filter-pill:hover .pill-count {
-  background: rgba(143,168,255,0.15);
-  color: #8fa8ff;
+  background: rgba(143,168,255,0.25);
+  color: #c4d4ff;
 }
 
 /* ── Scroll Content ──────────────────────────────────────────────────────── */
