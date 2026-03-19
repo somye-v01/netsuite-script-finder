@@ -239,9 +239,7 @@ function renderGroups(grouped) {
 
   // Determine order of categories
   const categoryOrder = [
-    'clientscript','userevent','suitelet','mapreduce',
-    'scheduled','restlet','workflowaction','portlet',
-    'massupdate','bundleinstallation',
+    'clientscript', 'userevent', 'workflowaction', 'massupdate',
   ];
 
   const allTypes = [

@@ -11,25 +11,18 @@
  * "BUNDLEINSTALLATIONSCRIPT" for bundle install scripts, etc.
  * We lowercase everything first, then remap known variants.
  */
+// Only script types that are ever deployed to a specific record type.
+// Suitelets, RESTlets, Scheduled, Map/Reduce, Portlets, and Bundle Install
+// scripts deploy to URL endpoints or run on a schedule — their scriptdeployment
+// rows have no recordtype and will never match a record-type query.
 const SCRIPTTYPE_NORMALIZE = {
-  // Direct matches (already lowercase)
-  client:                     'clientscript',    // NetSuite SuiteQL returns "CLIENT"
-  clientscript:               'clientscript',
-  userevent:                  'userevent',
-  scheduled:                  'scheduled',
-  scheduledscript:            'scheduled',       // NetSuite alternate
-  mapreduce:                  'mapreduce',
-  mapreducescript:            'mapreduce',       // NetSuite alternate
-  suitelet:                   'suitelet',
-  restlet:                    'restlet',
-  workflowaction:             'workflowaction',
-  workflowactionscript:       'workflowaction',  // NetSuite alternate
-  portlet:                    'portlet',
-  portletscript:              'portlet',         // NetSuite alternate
-  massupdate:                 'massupdate',
-  massupdatescript:           'massupdate',      // NetSuite alternate
-  bundleinstallation:         'bundleinstallation',
-  bundleinstallationscript:   'bundleinstallation', // NetSuite alternate
+  client:               'clientscript',   // NetSuite SuiteQL returns "CLIENT"
+  clientscript:         'clientscript',
+  userevent:            'userevent',
+  workflowaction:       'workflowaction',
+  workflowactionscript: 'workflowaction', // NetSuite alternate
+  massupdate:           'massupdate',
+  massupdatescript:     'massupdate',     // NetSuite alternate
 };
 
 /**
@@ -152,16 +145,10 @@ function sqlId(val) {
  */
 function groupByScriptType(rows) {
   const CATEGORIES = {
-    clientscript:   { label: 'Client Scripts',      color: '#4f8ef7' },
-    userevent:      { label: 'User Event Scripts',   color: '#9b59b6' },
-    suitelet:       { label: 'Suitelets',            color: '#1abc9c' },
-    mapreduce:      { label: 'Map / Reduce',         color: '#e67e22' },
-    scheduled:      { label: 'Scheduled Scripts',    color: '#e74c3c' },
-    restlet:        { label: 'RESTlets',             color: '#3498db' },
-    workflowaction: { label: 'Workflow Actions',     color: '#f39c12' },
-    portlet:        { label: 'Portlets',             color: '#2ecc71' },
-    massupdate:     { label: 'Mass Update Scripts',  color: '#95a5a6' },
-    bundleinstallation: { label: 'Bundle Install',   color: '#e056fd' },
+    clientscript:   { label: 'Client Scripts',     color: '#4f8ef7' },
+    userevent:      { label: 'User Event Scripts',  color: '#9b59b6' },
+    workflowaction: { label: 'Workflow Actions',    color: '#f39c12' },
+    massupdate:     { label: 'Mass Update Scripts', color: '#95a5a6' },
   };
 
   const grouped = {};
